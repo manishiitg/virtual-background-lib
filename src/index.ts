@@ -69,6 +69,9 @@ const initVirtualBackground = () => {
     if (!sourcePlayback.htmlElement)
       return
 
+    if (!segmentationConfig) {
+      return
+    }
     if (!segmentationConfig.backend) {
       return
     }

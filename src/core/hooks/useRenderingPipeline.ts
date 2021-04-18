@@ -37,8 +37,6 @@ export function useRenderingPipeline(
 
     console.log("render useRendingPipeline")
 
-
-
     newPipeline =
       segmentationConfig.pipeline === 'webgl2'
         ? buildWebGL2Pipeline(
