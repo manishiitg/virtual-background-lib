@@ -13,7 +13,6 @@ import {
 } from './core/helpers/backgroundHelper'
 import { PostProcessingConfig } from './core/helpers/postProcessingHelper'
 import { SegmentationConfig } from './core/helpers/segmentationHelper'
-// import { SourceConfig, sourceImageUrls } from './core/helpers/sourceHelper'
 
 import { TFLite } from "./core/hooks/useTFLite"
 
@@ -25,10 +24,7 @@ const initVirtualBackground = () => {
   }
 
 
-  let backgroundConfig: BackgroundConfig = {
-    type: 'image',
-    url: backgroundImageUrls[0],
-  }
+  let backgroundConfig: BackgroundConfig;
 
   const setBackgroundConfig = (config: BackgroundConfig) => {
     backgroundConfig = config
@@ -66,8 +62,8 @@ const initVirtualBackground = () => {
     tflite = await loadMeetModel(segmentationConfig) as TFLite
 
 
-    console.log(bodyPix)
-    console.log(tflite)
+    console.log("bodyPix", bodyPix)
+    console.log("tflite", tflite)
   }
 
   const render = async (canvasRef: HTMLCanvasElement, callback: renderCallbackType) => {

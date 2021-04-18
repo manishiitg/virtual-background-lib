@@ -70,7 +70,7 @@ export function useTFLite() {
       (!isSIMDSupported && segmentationConfig.backend === 'wasmSimd') ||
       segmentationConfig.model !== 'meet'
     ) {
-      return
+      return tflite
     }
 
     selectedTFLite = null!

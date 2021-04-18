@@ -27,7 +27,6 @@
     "init:tflite": "yarn init:tflite:image && yarn init:tflite:container",
     "init:tflite:image": "docker build -t tflite tflite",
     "init:tflite:container": "docker run -dit -v $PWD/tflite:/tflite_src -v $PWD/public/tflite:/tflite_build --name tflite tflite bash",
-    "start": "react-scripts start",
     "build": "rollup -c",
     "prepublish": "npm run build",
     "start:tflite:container": "docker start tflite && yarn update:tflite:container",
@@ -40,10 +39,7 @@
     "build:tflite:simd": "yarn build:tflite:simd:archive && yarn extract:tflite:simd",
     "build:tflite:simd:archive": "docker exec -w /tflite_src tflite bazel build --config=wasm -c opt --copt='-msimd128' :tflite-simd",
     "extract:tflite": "docker exec tflite tar xvf /tflite_src/bazel-bin/tflite -C /tflite_build",
-    "extract:tflite:simd": "docker exec tflite tar xvf /tflite_src/bazel-bin/tflite-simd -C /tflite_build",
-    "test": "react-scripts test",
-    "predeploy": "npm run build",
-    "eject": "react-scripts eject"
+    "extract:tflite:simd": "docker exec tflite tar xvf /tflite_src/bazel-bin/tflite-simd -C /tflite_build"
   },
   "prettier": {
     "semi": false,

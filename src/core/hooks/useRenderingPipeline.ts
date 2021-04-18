@@ -1,6 +1,4 @@
 import { BodyPix } from '@tensorflow-models/body-pix'
-// import { cleanup } from '@testing-library/react'
-// import { useEffect, useRef, useState } from 'react'
 import { buildCanvas2dPipeline } from '../../pipelines/canvas2d/canvas2dPipeline'
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline'
 import { BackgroundConfig } from '../helpers/backgroundHelper'
