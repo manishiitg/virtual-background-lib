@@ -51,7 +51,7 @@ const initVirtualBackground = () => {
   let tflite: TFLite;
 
   const init = async () => {
-    const { init, cleanup } = useBodyPix()
+    const { init } = useBodyPix()
     bodyPix = await init()
 
     const { loadMeetModel } = useTFLite()
@@ -75,6 +75,9 @@ const initVirtualBackground = () => {
     if (!segmentationConfig.backend) {
       return
     }
+
+    console.log("bodyPix", bodyPix)
+    console.log("tflite", tflite)
 
     const {
       render,
