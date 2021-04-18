@@ -1,0 +1,77 @@
+{
+  "name": "@manishiitg/virtual-background-lib",
+  "version": "0.1.0",
+  "description": "Demo on adding virtual background to a live video stream in the browser",
+  "main": "build/index.js",
+  "module": "build/index.es.js",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@tensorflow-models/body-pix": "^2.0.5",
+    "@tensorflow/tfjs": "^3.3.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^13.0.6",
+    "@types/emscripten": "^1.39.4",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.34",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2",
+    "tslib": "^2.2.0",
+    "typescript": "^4.0.3",
+    "wasm-feature-detect": "^1.2.10",
+    "web-vitals": "^1.1.1"
+  },
+  "scripts": {
+    "init:tflite": "yarn init:tflite:image && yarn init:tflite:container",
+    "init:tflite:image": "docker build -t tflite tflite",
+    "init:tflite:container": "docker run -dit -v $PWD/tflite:/tflite_src -v $PWD/public/tflite:/tflite_build --name tflite tflite bash",
+    "start": "react-scripts start",
+    "build": "rollup -c",
+    "prepublish": "npm run build",
+    "start:tflite:container": "docker start tflite && yarn update:tflite:container",
+    "update:tflite:container": "yarn update:tensorflow && yarn update:mediapipe",
+    "update:tensorflow": "docker exec -w /tensorflow_src tflite git pull",
+    "update:mediapipe": "docker exec -w /mediapipe_src tflite git pull",
+    "build:tflite:all": "yarn build:tflite && yarn build:tflite:simd",
+    "build:tflite": "yarn build:tflite:archive && yarn extract:tflite",
+    "build:tflite:archive": "docker exec -w /tflite_src tflite bazel build --config=wasm -c opt :tflite",
+    "build:tflite:simd": "yarn build:tflite:simd:archive && yarn extract:tflite:simd",
+    "build:tflite:simd:archive": "docker exec -w /tflite_src tflite bazel build --config=wasm -c opt --copt='-msimd128' :tflite-simd",
+    "extract:tflite": "docker exec tflite tar xvf /tflite_src/bazel-bin/tflite -C /tflite_build",
+    "extract:tflite:simd": "docker exec tflite tar xvf /tflite_src/bazel-bin/tflite-simd -C /tflite_build",
+    "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "rollup": "^2.45.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-typescript2": "^0.30.0"
+  }
+}
