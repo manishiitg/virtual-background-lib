@@ -61,7 +61,6 @@ export function useRenderingPipeline(
         )
 
     async function render() {
-      console.log("render inside useRendingPipeline")
       if (!shouldRender) {
         return
       }

@@ -50,12 +50,8 @@ const initVirtualBackground = () => {
   let bodyPix: tfBodyPix.BodyPix;
   let tflite: TFLite;
 
-  let cleanUpBodyPix: any;
-  let cleanUpPipeline: any;
-
   const init = async () => {
     const { init, cleanup } = useBodyPix()
-    cleanUpBodyPix = cleanup
     bodyPix = await init()
 
     const { loadMeetModel } = useTFLite()
@@ -73,11 +69,9 @@ const initVirtualBackground = () => {
     if (!sourcePlayback.htmlElement)
       return
 
-    if (!segmentationConfig) {
+    if (!segmentationConfig.backend) {
       return
     }
-
-
 
     const {
       render,
@@ -90,7 +84,6 @@ const initVirtualBackground = () => {
       tflite
     )
 
-    cleanUpPipeline = cleanup
 
     const {
       pipeline
@@ -99,11 +92,8 @@ const initVirtualBackground = () => {
     if (pipeline) {
       pipeline.updatePostProcessingConfig(postProcessingConfig)
     }
-  }
 
-  function cleanup() {
-    cleanUpPipeline && cleanUpPipeline()
-    cleanUpBodyPix && cleanUpBodyPix()
+    return cleanup
   }
 
 
@@ -129,7 +119,6 @@ const initVirtualBackground = () => {
   return {
     init,
     render,
-    cleanup,
     enableBodyPix,
     enableMeet,
     setBackgroundConfig,
