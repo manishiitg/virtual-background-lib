@@ -28,7 +28,7 @@
     "init:tflite:image": "docker build -t tflite tflite",
     "init:tflite:container": "docker run -dit -v $PWD/tflite:/tflite_src -v $PWD/public/tflite:/tflite_build --name tflite tflite bash",
     "build": "rollup -c",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && npm version patch --version",
     "start:tflite:container": "docker start tflite && yarn update:tflite:container",
     "update:tflite:container": "yarn update:tensorflow && yarn update:mediapipe",
     "update:tensorflow": "docker exec -w /tensorflow_src tflite git pull",
