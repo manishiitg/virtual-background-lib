@@ -7,6 +7,14 @@ import { SegmentationConfig } from '../helpers/segmentationHelper'
 import { SourcePlayback } from '../helpers/sourceHelper'
 import { TFLite } from './useTFLite'
 
+
+import {
+  CLEAR_TIMEOUT,
+  TIMEOUT_TICK,
+  SET_TIMEOUT,
+  timerWorkerScript
+} from './../helpers/TimeWorker';
+
 export interface renderCallbackType { (fps: number, durations: number[]): void }
 
 
@@ -25,6 +33,9 @@ export function useRenderingPipeline(
   let renderRequestId: number
   let newPipeline: any
 
+  let webWorker = new Worker(timerWorkerScript, { name: 'Blur effect worker' });
+  let screenOff = false
+
   async function render(canvasRef: HTMLCanvasElement, callback: renderCallbackType) {
     // The useEffect cleanup function is not enough to stop
     // the rendering loop when the framerate is low
@@ -34,6 +45,25 @@ export function useRenderingPipeline(
     let eventCount = 0
     let frameCount = 0
     const frameDurations: number[] = []
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === 'visible') {
+        if (screenOff) {
+          screenOff = false
+          webWorker.postMessage({
+            id: CLEAR_TIMEOUT
+          });
+        }
+      } else {
+        screenOff = true
+        webWorker.postMessage({
+          id: SET_TIMEOUT,
+          timeMs: 1000 / 30
+        });
+
+      }
+    });
+
 
     console.log("render useRendingPipeline")
 
@@ -65,7 +95,19 @@ export function useRenderingPipeline(
       beginFrame()
       await newPipeline.render()
       endFrame()
-      renderRequestId = requestAnimationFrame(render)
+      if (screenOff)
+        webWorker.postMessage({
+          id: SET_TIMEOUT,
+          timeMs: 1000 / 30
+        });
+      else
+        renderRequestId = requestAnimationFrame(render)
+    }
+
+    webWorker.onmessage = (response) => {
+      if (response.data.id === TIMEOUT_TICK) {
+        render()
+      }
     }
 
     function beginFrame() {
@@ -112,6 +154,12 @@ export function useRenderingPipeline(
     shouldRender = false
     cancelAnimationFrame(renderRequestId)
     newPipeline.cleanUp()
+    webWorker.postMessage({
+      id: CLEAR_TIMEOUT
+    });
+
+    webWorker.terminate();
+
     console.log(
       'Animation stopped:',
       sourcePlayback,

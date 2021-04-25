@@ -78,6 +78,11 @@ export function useTFLite() {
     const newSelectedTFLite =
       segmentationConfig.backend === 'wasmSimd' ? tfliteSIMD : tflite
 
+    if (segmentationConfig.backend === 'wasmSimd') {
+      /* added extra later on */
+      segmentationConfig.inputResolution = '144p'
+    }
+
     if (!newSelectedTFLite) {
       throw new Error(
         `TFLite backend unavailable: ${segmentationConfig.backend}`
