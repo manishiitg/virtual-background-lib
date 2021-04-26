@@ -108,7 +108,7 @@ const initVirtualBackground = () => {
       model: 'meet',
       backend: 'wasm',
       inputResolution: '96p',
-      pipeline: 'webgl2',
+      pipeline: 'webgl2', //webgl2 i think webgl2 is not working on tabs and some slower laptop, even when actual support
     }
     setSegmentationConfig(segConfig)
   }

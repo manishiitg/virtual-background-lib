@@ -1,6 +1,6 @@
 {
   "name": "@manishiitg/virtual-background-lib",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Demo on adding virtual background to a live video stream in the browser",
   "main": "build/index.js",
   "module": "build/index.es.js",
