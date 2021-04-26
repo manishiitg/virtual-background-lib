@@ -15,6 +15,8 @@ import {
   timerWorkerScript
 } from './../helpers/TimeWorker';
 
+import { WEBGL } from "../helpers/WebGL"
+
 export interface renderCallbackType { (fps: number, durations: number[]): void }
 
 
@@ -65,7 +67,9 @@ export function useRenderingPipeline(
     });
 
 
-    console.log("render useRendingPipeline")
+    if (!WEBGL.isWebGLAvailable()) {
+      segmentationConfig.pipeline === 'canvas2dCpu'
+    }
 
     newPipeline =
       segmentationConfig.pipeline === 'webgl2'
