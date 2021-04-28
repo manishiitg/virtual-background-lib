@@ -147,8 +147,40 @@ export function buildCanvas2dPipeline(
 
     if (backgroundConfig.htmlElement instanceof HTMLImageElement) {
       ctx.globalCompositeOperation = "destination-over"
-      ctx.drawImage(backgroundConfig.htmlElement, 0, 0, sourcePlayback.width,sourcePlayback.height)
+      ctx.drawImage(backgroundConfig.htmlElement, 0, 0, sourcePlayback.width, sourcePlayback.height)
     } else {
+      if (backgroundConfig.type === "greenscreen") {
+
+        ctx.globalCompositeOperation = "copy"
+        const width = sourcePlayback.width
+        const height = sourcePlayback.height
+        const videoData = ctx.getImageData(0, 0, width, height).data
+
+
+        const bytes = new Uint8ClampedArray(width * height * 4);
+
+        for (let i = 0; i < height; i += 1) {
+          for (let j = 0; j < width; j += 1) {
+            const n = i * width + j;
+            const k = n * 4;
+            if (videoData[k + 0] === 0 || videoData[k + 1] === 0 || videoData[k + 2] === 0 || videoData[k + 3] === 0) {
+              bytes[k + 0] = 0
+              bytes[k + 1] = 255
+              bytes[k + 2] = 0
+              bytes[k + 3] = 255
+            } else {
+              bytes[k + 0] = videoData[k + 0]
+              bytes[k + 1] = videoData[k + 1]
+              bytes[k + 2] = videoData[k + 2]
+              bytes[k + 3] = videoData[k + 3]
+            }
+          }
+        }
+        const idata = ctx.createImageData(width, height);
+        idata.data.set(bytes);
+        ctx.putImageData(idata, 0, 0);
+
+      }
       // console.log("backgroundConfig.htmlElement", backgroundConfig.htmlElement)
     }
 

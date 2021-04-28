@@ -102,7 +102,15 @@ const initVirtualBackground = () => {
     return cleanup
   }
 
-
+  function enableMeetCanvas() {
+    let segConfig: SegmentationConfig = {
+      model: 'meet',
+      backend: 'wasm',
+      inputResolution: '96p',
+      pipeline: 'canvas2dCpu'
+    }
+    setSegmentationConfig(segConfig)
+  }
   function enableMeet() {
     let segConfig: SegmentationConfig = {
       model: 'meet',
@@ -127,8 +135,10 @@ const initVirtualBackground = () => {
     render,
     enableBodyPix,
     enableMeet,
+    enableMeetCanvas,
     setBackgroundConfig,
-    setSourcePlayback
+    setSourcePlayback,
+    setSegmentationConfig
   }
 }
 
